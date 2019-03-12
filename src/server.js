@@ -1,5 +1,26 @@
-import express from 'express';
+let express = require('express');
 let app = express();
-app.listen(3000, () => {
-    console.log('Example app listening on port 3000!');
-})
+//Data base
+const sequelize = require('./database/index');
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+
+
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
+
+
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!');
+});
+
