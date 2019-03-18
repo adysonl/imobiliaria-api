@@ -11,8 +11,8 @@ router.get(url, function(req, res) {
     })
   });
 
-router.get(url + '/:contract_id', function(req, res) {
-    Contract.findById(req.params.contract_id).then(contract => {
+router.get(url + '/:id', function(req, res) {
+    Contract.findById(req.params.id).then(contract => {
         if (contract) {
             res.send(contract);
         } else {
@@ -32,8 +32,8 @@ router.post(url, function(req, res) {
     
 });
 
-router.put(url + '/:contract_id', function(req,res) {
-    Contract.findById(req.params.contract_id).then(contract => {
+router.put(url + '/:id', function(req,res) {
+    Contract.findById(req.params.id).then(contract => {
         if (contract) {
             contract.update(req.body).then(() => {
                 res.send(contract);
@@ -44,8 +44,8 @@ router.put(url + '/:contract_id', function(req,res) {
     });
 });
 
-router.delete(url + '/contract/:contract_id', function(req,res) {
-    Contract.findById(req.params.contract_id).then(contract => {
+router.delete(url + '/contract/:id', function(req,res) {
+    Contract.findById(req.params.id).then(contract => {
         if (contract) {
             contract.destroy().then(() => {
                 res.send(contract);

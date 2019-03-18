@@ -3,16 +3,26 @@ const router = express.Router();
 const sequelize = require('sequelize');
 const Immobile = require('../models/immobile');
 
+const url = '/immobile';
 
-router.get('/Immobiles', function(req, res) {
+router.get(url, function(req, res) {
     Immobile.findAll().then(immobiles => {
         res.send(immobiles);
     })
   });
 
-router.post('/Immobile', function(req, res){
+router.get(url + '/:id', function(req, res) {
+    Immobile.findById(req.params.id).then(immobile => {
+        if(immobile) {
+            res.send(immobile);
+        } else {
+            res.json({error: 'immobile not found'});
+        }
+    });
+});
+
+router.post(url, function(req, res){
     try{
-        console.log(req.body);
         const immobile = Immobile.create(req.body);
         return res.send(req.body);
     }catch (err){
@@ -21,8 +31,8 @@ router.post('/Immobile', function(req, res){
     
 });
 
-router.put('/Immobile', function(req,res){
-    Immobile.findById(req.body.id).then(immobile => {
+router.put(url + '/:id', function(req,res){
+    Immobile.findById(req.params.id).then(immobile => {
         if(immobile){
             immobile.update(req.body).then(() => {
                 res.send(immobile);
@@ -33,8 +43,8 @@ router.put('/Immobile', function(req,res){
     });
 });
 
-router.delete('/Immobile', function(req,res){
-    Immobile.findById(req.body.id).then(immobile => {
+router.delete(url + '/:id', function(req,res){
+    Immobile.findById(req.params.id).then(immobile => {
         if(immobile){
             immobile.destroy().then(() => {
                 res.send(immobile);
@@ -45,4 +55,4 @@ router.delete('/Immobile', function(req,res){
     });
 });
 
-module.exports = app => app.use('/immobile', router);
+module.exports = app => app.use(url, router);
