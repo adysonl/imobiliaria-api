@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Client = require('../models/client');
-
+const middleware = require('../middleweres/auth');
 const url = '/client';
 
-router.get('', function(req, res) {
+router.get('', middleware.verify, function(req, res) {
     Client.findAll({
         where: req.query
     }).then(clients => {
@@ -12,7 +12,7 @@ router.get('', function(req, res) {
     });
 });
 
-router.get('/:id', function(req, res) {
+router.get('/:id', middleware.verify, function(req, res) {
     Client.findOne({
         where: req.params
     }).then(client => {
@@ -24,7 +24,7 @@ router.get('/:id', function(req, res) {
     });
 });
 
-router.post('', function(req, res) {
+router.post('', middleware.verify, function(req, res) {
     try {
         Client.create(req.body);
         return res.send(req.body);
@@ -33,7 +33,7 @@ router.post('', function(req, res) {
     }
 });
 
-router.put('/:id', function(req,res) {
+router.put('/:id', middleware.verify, function(req,res) {
     Client.findByPk(req.params.id).then(client => {
         if (client) {
             Client.update(req.body).then(() => {
@@ -45,7 +45,7 @@ router.put('/:id', function(req,res) {
     });
 });
 
-router.delete('/:id', function(req,res) {
+router.delete('/:id', middleware.verify, function(req,res) {
     Client.findByPk(req.params.id).then(client => {
         if(client) {
             Client.destroy().then(() => {

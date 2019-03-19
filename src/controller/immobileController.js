@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const sequelize = require('sequelize');
 const Immobile = require('../models/immobile');
-
+const middleware = require('../middleweres/auth');
 
 router.get('/', function(req, res) {
     Immobile.findAll({
@@ -25,7 +25,7 @@ router.get('/:id', function(req, res) {
     });
 });
 
-router.post('', function(req, res){
+router.post('', middleware.verify, function(req, res){
     try{
         const immobile = Immobile.create(req.body);
         return res.send(req.body);
@@ -35,7 +35,7 @@ router.post('', function(req, res){
     
 });
 
-router.put('/:id', function(req,res){
+router.put('/:id', middleware.verify, function(req,res){
     Immobile.findByPk(req.params.id).then(immobile => {
         if(immobile){
             immobile.update(req.body).then(() => {
@@ -47,7 +47,7 @@ router.put('/:id', function(req,res){
     });
 });
 
-router.delete('/:id', function(req,res){
+router.delete('/:id', middleware.verify, function(req,res){
     Immobile.findByPk(req.params.id).then(immobile => {
         if(immobile){
             immobile.destroy().then(() => {

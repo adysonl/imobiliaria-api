@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Payment = require('../models/payment');
-
-router.get('', function(req, res) {
+const middleware = require('../middleweres/auth');
+const url = '/payment';
+router.get('', middleware.verify, function(req, res) {
     Payment.findAll({
         where: req.query
     }).then(payments => {
@@ -10,7 +11,7 @@ router.get('', function(req, res) {
     })
   });
 
-router.get('/:id', function(req, res) {
+router.get('/:id', middleware.verify, function(req, res) {
     Payment.findOne({
         where: req.params
     }).then(payment => {
@@ -22,7 +23,7 @@ router.get('/:id', function(req, res) {
     });
 });
 
-router.post('', function(req, res) {
+router.post('', middleware.verify, function(req, res) {
     try {
         const Payment = Payment.create(req.body);
         return res.send(req.body);
@@ -32,7 +33,7 @@ router.post('', function(req, res) {
     
 });
 
-router.put('/:id', function(req,res) {
+router.put('/:id', middleware.verify, function(req,res) {
     Payment.findByPk(req.params.id).then(payment => {
         if (payment) {
             payment.update(req.body).then(() => {
@@ -44,7 +45,7 @@ router.put('/:id', function(req,res) {
     });
 });
 
-router.delete('/:id', function(req,res) {
+router.delete('/:id', middleware.verify, function(req,res) {
     Payment.findByPk(req.params.id).then(payment => {
         if (payment) {
             payment.destroy().then(() => {

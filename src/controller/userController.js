@@ -5,26 +5,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const config = require('../config');
-
-router.use(function (req, res, next){
-    //console.log(req.headers);
-    const token = req.headers['x-access-token'];
-    if(token){
-        jwt.verify(token, config.secret, (err, decoded) => {
-        if(err){
-            res.json({message: 'falha na autenticacao'});
-        }else{
-            //console.log(decoded);
-            next();
-        }
-        });
-    }else{
-        res.json({message: 'necessaria autenticacao'});
-    }
-});
+const middleware = require('../middleweres/auth');
 
 
-router.get('', function(req, res) {
+router.get('', middleware.verify, function(req, res) {
     //console.log(req);
         User.findAll({
             where: req.query
@@ -70,7 +54,7 @@ router.post('/', function(req, res){
     
 });
 
-router.put('/', function(req,res){
+router.put('/', middleware.verify, function(req,res){
     User.findByPk(req.params.id).then(user => {
         if(user){
             User.update(req.body).then(() => {
@@ -82,7 +66,7 @@ router.put('/', function(req,res){
     });
 });
 
-router.delete('/', function(req,res){
+router.delete('/', middleware.verify, function(req,res){
     User.findByPk(req.params.id).then(user => {
         if(user){
             User.destroy().then(() => {
