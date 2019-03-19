@@ -27,8 +27,8 @@ router.get('/:id', middleware.verify, function(req, res) {
 
 router.post('', middleware.verify, function(req, res) {
     try {
-        const contract = Contract.create(req.body);
-        return res.send(req.body);
+        const Contract = Contract.create(req.body);
+        return res.send({message: 'contract created'});
     } catch (err) {
         return res.status(400).send({error: 'falha no registro'});
     }

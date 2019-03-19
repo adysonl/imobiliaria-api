@@ -26,7 +26,7 @@ router.get('/:id', middleware.verify, function(req, res) {
 router.post('', middleware.verify, function(req, res) {
     try {
         const Payment = Payment.create(req.body);
-        return res.send(req.body);
+        return res.send({message: 'payment created'});
     } catch (err) {
         return res.status(400).send({error: 'falha no registro'});
     }

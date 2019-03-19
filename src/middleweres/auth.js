@@ -6,14 +6,14 @@ const verify = (req, res, next) =>{
     if(token){
         jwt.verify(token, config.secret, (err, decoded) => {
         if(err){
-            res.json({message: 'falha na autenticacao'});
+            res.json({message: 'authentication failure'});
         }else{
             console.log(decoded);
             next();
         }
         });
     }else{
-        res.json({message: 'necessaria autenticacao'});
+        res.json({message: 'authentication required'});
     }
 }
 

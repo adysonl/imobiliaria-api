@@ -27,7 +27,7 @@ router.get('/:id', middleware.verify, function(req, res) {
 router.post('', middleware.verify, function(req, res) {
     try {
         Client.create(req.body);
-        return res.send(req.body);
+        return res.send({message: 'client created'});
     } catch (err) {
         return res.status(400).send({error: 'falha no registro'});
     }
