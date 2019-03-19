@@ -1,13 +1,13 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../database/index');
 const Immobile = require('../models/immobile')
-const user = require('../models/user');
+const Client = require('../models/client');
 
-const contract = sequelize.define('contracts', {
+const Contract = sequelize.define('contracts', {
     renter: {
         type: Sequelize.INTEGER,
         references: {
-            model: user,
+            model: Client,
             key:'id',
             deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
@@ -15,24 +15,54 @@ const contract = sequelize.define('contracts', {
     locator: {
         type: Sequelize.INTEGER,
         references: {
-            model: Immobile,
-            key:'id',
+            model: Client,
+            key: 'id',
             deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
     },
     immobile: {
         type: Sequelize.INTEGER,
         references: {
-            model: user,
-            key:'id',
+            model: Immobile,
+            key: 'id',
             deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
         }
     },
-    typeContract:{
-        type: Sequelize.STRING
+    guarantor: {
+        type: Sequelize.INTEGER,
+        references: {
+            model: Client,
+            key: 'id',
+            deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+        }
+    },
+    status: {
+        type: Sequelize.ENUM,
+        values: ['active', 'expired', 'renewed']
+    },
+    value: {
+        type: Sequelize.DOUBLE        
+    },
+    condo:  {
+        type: Sequelize.DOUBLE
+    },
+    startDate: {
+        type: Sequelize.DATE
+    },
+    endDate: {
+        type: Sequelize.DATE
+    },
+    paymentDay: {
+        type: Sequelize.INTEGER
+    },
+    hasGarage: {
+        type: Sequelize.BOOLEAN
+    },
+    garageValue: {
+        type: Sequelize.DOUBLE
     }
 });
 
-//contract.sync();
+Contract.sync();
 
-module.exports = contract;
+module.exports = Contract;

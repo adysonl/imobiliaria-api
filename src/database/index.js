@@ -1,10 +1,9 @@
 const Sequelize = require('sequelize');
 
-module.exports = new Sequelize('imobdb', 'admin', 'admin', {
+module.exports = new Sequelize('imobdb', 'postgres', 'admin', {
   host: 'localhost',
   dialect: 'postgres',
-  operatorsAliases: false,
-
+  
   pool: {
     max: 5,
     min: 0,

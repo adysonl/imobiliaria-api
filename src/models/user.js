@@ -5,12 +5,6 @@ const user = sequelize.define('users', {
     name: {
         type: Sequelize.STRING
     },
-    cpf: {
-        type: Sequelize.STRING
-    },
-    rg: {
-        type: Sequelize.STRING
-    },
     login: {
         type: Sequelize.STRING
     },
@@ -22,5 +16,5 @@ const user = sequelize.define('users', {
     }
 });
 
-//user.sync();
+user.sync();
 module.exports = user;
