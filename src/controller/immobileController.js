@@ -39,7 +39,7 @@ router.put('/:id', middleware.verify, function(req,res){
     Immobile.findByPk(req.params.id).then(immobile => {
         if(immobile){
             immobile.update(req.body, {where: req.params}).then(() => {
-                res.send(immobile);
+                res.send({message: 'immobile changed'});
             })
         }else{
             res.json({error: "user not found"});
@@ -51,7 +51,7 @@ router.delete('/:id', middleware.verify, function(req,res){
     Immobile.findByPk(req.params.id).then(immobile => {
         if(immobile){
             immobile.destroy({where: req.params}).then(() => {
-                res.send(immobile);
+                res.send({message: 'immobile removed'});
             })
         }else{
             res.json({error: "immobile not found"});

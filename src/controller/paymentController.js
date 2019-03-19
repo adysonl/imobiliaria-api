@@ -39,7 +39,7 @@ router.put('/:id', middleware.verify, function(req,res) {
     Payment.findByPk(req.params.id).then(payment => {
         if (payment) {
             payment.update(req.body, {where: req.params}).then(() => {
-                res.send(payment);
+                res.send({message: 'payment changed'});
             });
         } else {
             res.json({error: 'payment not found'});

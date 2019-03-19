@@ -39,10 +39,10 @@ router.put('/:id', middleware.verify, function(req,res) {
     Contract.findByPk(req.params.id).then(contract => {
         if (contract) {
             contract.update(req.body, {where: req.params}).then(() => {
-                res.send(contract);
+                res.send({message: 'contract updated'});
             });
         } else {
-            res.json({error: 'user not found'});
+            res.json({error: 'contract not found'});
         }
     });
 });

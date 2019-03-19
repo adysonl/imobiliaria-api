@@ -37,7 +37,7 @@ router.put('/:id', middleware.verify, function(req,res) {
     Client.findByPk(req.params.id).then(client => {
         if (client) {
             Client.update(req.body, {where: req.params}).then(() => {
-                res.send(client);
+                res.send({message: 'client updated'});
             });
         } else {
             res.json({error: 'client not found'});
@@ -49,7 +49,7 @@ router.delete('/:id', middleware.verify, function(req,res) {
     Client.findByPk(req.params.id).then(client => {
         if(client) {
             Client.destroy({where: req.params}).then(() => {
-                res.send(client);
+                res.send({message: 'client deleted'});
             });
         } else {
             res.json({error: "client not found"});
