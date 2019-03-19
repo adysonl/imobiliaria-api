@@ -48,7 +48,7 @@ router.put('/:id', function(req,res) {
 router.delete('/:id', function(req,res) {
     Client.findByPk(req.params.id).then(client => {
         if(client) {
-            Client.destroy().then(() => {
+            Client.destroy({where: req.params}, {where: req.params}).then(() => {
                 res.send(client);
             });
         } else {

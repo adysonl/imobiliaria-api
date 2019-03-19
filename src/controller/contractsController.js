@@ -50,7 +50,7 @@ router.put('/:id', function(req,res) {
 router.delete('/:id', function(req,res) {
     Contract.findByPk(req.params.id).then(contract => {
         if (contract) {
-            contract.destroy().then(() => {
+            contract.destroy({where: req.params}, {where: req.params}).then(() => {
                 res.send(contract);
             });
         } else {
