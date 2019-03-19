@@ -5,13 +5,13 @@ const Contract = require('../models/contract');
 
 const url = '/contract';
 
-router.get(url, function(req, res) {
+router.get('', function(req, res) {
     Contract.findAll().then(contracts => {
         res.send(contracts);
     })
   });
 
-router.get(url + '/:id', function(req, res) {
+router.get('/:id', function(req, res) {
     Contract.findById(req.params.id).then(contract => {
         if (contract) {
             res.send(contract);
@@ -21,9 +21,8 @@ router.get(url + '/:id', function(req, res) {
     });
 });
 
-router.post(url, function(req, res) {
+router.post('', function(req, res) {
     try {
-        console.log(req.body);
         const contract = Contract.create(req.body);
         return res.send(req.body);
     } catch (err) {
@@ -32,7 +31,7 @@ router.post(url, function(req, res) {
     
 });
 
-router.put(url + '/:id', function(req,res) {
+router.put('/:id', function(req,res) {
     Contract.findById(req.params.id).then(contract => {
         if (contract) {
             contract.update(req.body).then(() => {
@@ -44,7 +43,7 @@ router.put(url + '/:id', function(req,res) {
     });
 });
 
-router.delete(url + '/contract/:id', function(req,res) {
+router.delete('/:id', function(req,res) {
     Contract.findById(req.params.id).then(contract => {
         if (contract) {
             contract.destroy().then(() => {

@@ -22,6 +22,7 @@ sequelize
 require('./controller/userController')(app);
 require('./controller/immobileController')(app);
 require('./controller/contractsController')(app);
+require('./controller/clientController')(app);
 //require('./middleweres/auth')(app);
 
 app.listen(3000, function () {

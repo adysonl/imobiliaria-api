@@ -24,7 +24,7 @@ router.use(function (req, res, next){
 });
 
 
-router.get('/users', function(req, res) {
+router.get('', function(req, res) {
     //console.log(req);
         User.findAll().then(users => {
             res.send(users);
@@ -66,7 +66,7 @@ router.post('/', function(req, res){
 });
 
 router.put('/', function(req,res){
-    User.findById(req.body.id).then(user => {
+    User.findById(req.params.id).then(user => {
         if(user){
             User.update(req.body).then(() => {
                 res.send(user);
@@ -78,7 +78,7 @@ router.put('/', function(req,res){
 });
 
 router.delete('/', function(req,res){
-    User.findById(req.body.id).then(user => {
+    User.findById(req.params.id).then(user => {
         if(user){
             User.destroy().then(() => {
                 res.send(user);
