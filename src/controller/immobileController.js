@@ -38,7 +38,7 @@ router.post('', middleware.verify, function(req, res){
 router.put('/:id', middleware.verify, function(req,res){
     Immobile.findByPk(req.params.id).then(immobile => {
         if(immobile){
-            immobile.update(req.body).then(() => {
+            immobile.update(req.body, {where: req.params}).then(() => {
                 res.send(immobile);
             })
         }else{
@@ -50,7 +50,7 @@ router.put('/:id', middleware.verify, function(req,res){
 router.delete('/:id', middleware.verify, function(req,res){
     Immobile.findByPk(req.params.id).then(immobile => {
         if(immobile){
-            immobile.destroy({where: req.params}, {where: req.params}).then(() => {
+            immobile.destroy({where: req.params}).then(() => {
                 res.send(immobile);
             })
         }else{

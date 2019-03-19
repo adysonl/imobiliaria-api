@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Payment = require('../models/payment');
 const middleware = require('../middleweres/auth');
+
 const url = '/payment';
+
 router.get('', middleware.verify, function(req, res) {
     Payment.findAll({
         where: req.query
@@ -48,7 +50,7 @@ router.put('/:id', middleware.verify, function(req,res) {
 router.delete('/:id', middleware.verify, function(req,res) {
     Payment.findByPk(req.params.id).then(payment => {
         if (payment) {
-            payment.destroy({where: req.params}, {where: req.params}).then(() => {
+            payment.destroy({where: req.params}).then(() => {
                 res.send(payment);
             });
         } else {

@@ -36,7 +36,7 @@ router.post('', middleware.verify, function(req, res) {
 router.put('/:id', middleware.verify, function(req,res) {
     Client.findByPk(req.params.id).then(client => {
         if (client) {
-            Client.update(req.body).then(() => {
+            Client.update(req.body, {where: req.params}).then(() => {
                 res.send(client);
             });
         } else {
@@ -48,7 +48,7 @@ router.put('/:id', middleware.verify, function(req,res) {
 router.delete('/:id', middleware.verify, function(req,res) {
     Client.findByPk(req.params.id).then(client => {
         if(client) {
-            Client.destroy({where: req.params}, {where: req.params}).then(() => {
+            Client.destroy({where: req.params}).then(() => {
                 res.send(client);
             });
         } else {
