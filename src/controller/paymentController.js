@@ -10,7 +10,7 @@ router.get('', function(req, res) {
     })
   });
 
-router.get('' + '/:id', function(req, res) {
+router.get('/:id', function(req, res) {
     Payment.findOne({
         where: req.params
     }).then(payment => {
@@ -24,7 +24,6 @@ router.get('' + '/:id', function(req, res) {
 
 router.post('', function(req, res) {
     try {
-        console.log(req.body);
         const Payment = Payment.create(req.body);
         return res.send(req.body);
     } catch (err) {
@@ -33,8 +32,8 @@ router.post('', function(req, res) {
     
 });
 
-router.put('' + '/:id', function(req,res) {
-    Payment.findById(req.params.id).then(payment => {
+router.put('/:id', function(req,res) {
+    Payment.findByPk(req.params.id).then(payment => {
         if (payment) {
             payment.update(req.body).then(() => {
                 res.send(payment);
@@ -45,8 +44,8 @@ router.put('' + '/:id', function(req,res) {
     });
 });
 
-router.delete('' + '/:id', function(req,res) {
-    Payment.findById(req.params.id).then(payment => {
+router.delete('/:id', function(req,res) {
+    Payment.findByPk(req.params.id).then(payment => {
         if (payment) {
             payment.destroy().then(() => {
                 res.send(payment);
@@ -57,4 +56,4 @@ router.delete('' + '/:id', function(req,res) {
     });
 });
 
-module.exports = app => app.use(url, router);
+module.exports = app => app.use('/payment', router);

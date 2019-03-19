@@ -55,9 +55,12 @@ router.post('/', function(req, res){
     try{
         console.log(req.body);
         bcrypt.hash(req.body.password, 12).then((result) =>{
-            User.create({name: req.body.name, cpf: req.body.cpf,
-            rg: req.body.rg, login: req.body.login, password: result,
-        email: req.body.email});
+            User.create({
+                name: req.body.name,
+                login: req.body.login,
+                password: result,
+                email: req.body.email
+            });
         });
         
         return res.send(req.body);
@@ -68,7 +71,7 @@ router.post('/', function(req, res){
 });
 
 router.put('/', function(req,res){
-    User.findById(req.params.id).then(user => {
+    User.findByPk(req.params.id).then(user => {
         if(user){
             User.update(req.body).then(() => {
                 res.send(user);
@@ -80,7 +83,7 @@ router.put('/', function(req,res){
 });
 
 router.delete('/', function(req,res){
-    User.findById(req.params.id).then(user => {
+    User.findByPk(req.params.id).then(user => {
         if(user){
             User.destroy().then(() => {
                 res.send(user);

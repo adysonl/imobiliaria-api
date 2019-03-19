@@ -36,7 +36,7 @@ router.post('', function(req, res){
 });
 
 router.put('/:id', function(req,res){
-    Immobile.findById(req.params.id).then(immobile => {
+    Immobile.findByPk(req.params.id).then(immobile => {
         if(immobile){
             immobile.update(req.body).then(() => {
                 res.send(immobile);
@@ -48,7 +48,7 @@ router.put('/:id', function(req,res){
 });
 
 router.delete('/:id', function(req,res){
-    Immobile.findById(req.params.id).then(immobile => {
+    Immobile.findByPk(req.params.id).then(immobile => {
         if(immobile){
             immobile.destroy().then(() => {
                 res.send(immobile);

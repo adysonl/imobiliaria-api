@@ -34,7 +34,7 @@ router.post('', function(req, res) {
 });
 
 router.put('/:id', function(req,res) {
-    Client.findById(req.params.id).then(client => {
+    Client.findByPk(req.params.id).then(client => {
         if (client) {
             Client.update(req.body).then(() => {
                 res.send(client);
@@ -46,7 +46,7 @@ router.put('/:id', function(req,res) {
 });
 
 router.delete('/:id', function(req,res) {
-    Client.findById(req.params.id).then(client => {
+    Client.findByPk(req.params.id).then(client => {
         if(client) {
             Client.destroy().then(() => {
                 res.send(client);

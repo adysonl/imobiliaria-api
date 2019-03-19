@@ -36,7 +36,7 @@ router.post('', function(req, res) {
 });
 
 router.put('/:id', function(req,res) {
-    Contract.findById(req.params.id).then(contract => {
+    Contract.findByPk(req.params.id).then(contract => {
         if (contract) {
             contract.update(req.body).then(() => {
                 res.send(contract);
@@ -48,7 +48,7 @@ router.put('/:id', function(req,res) {
 });
 
 router.delete('/:id', function(req,res) {
-    Contract.findById(req.params.id).then(contract => {
+    Contract.findByPk(req.params.id).then(contract => {
         if (contract) {
             contract.destroy().then(() => {
                 res.send(contract);

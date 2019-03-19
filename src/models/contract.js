@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../database/index');
-const Immobile = require('../models/immobile')
+const Immobile = require('../models/immobile');
 const Client = require('../models/client');
 
 const Contract = sequelize.define('contracts', {
