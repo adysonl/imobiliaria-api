@@ -6,13 +6,17 @@ const Contract = require('../models/contract');
 const url = '/contract';
 
 router.get('', function(req, res) {
-    Contract.findAll().then(contracts => {
+    Contract.findAll({
+        where: req.query
+    }).then(contracts => {
         res.send(contracts);
     })
   });
 
 router.get('/:id', function(req, res) {
-    Contract.findById(req.params.id).then(contract => {
+    Contract.findOne({
+        where: req.params
+    }).then(contract => {
         if (contract) {
             res.send(contract);
         } else {

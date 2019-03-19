@@ -3,13 +3,17 @@ const router = express.Router();
 const Payment = require('../models/payment');
 
 router.get('', function(req, res) {
-    Payment.findAll().then(payments => {
+    Payment.findAll({
+        where: req.query
+    }).then(payments => {
         res.send(payments);
     })
   });
 
 router.get('' + '/:id', function(req, res) {
-    Payment.findById(req.params.id).then(payment => {
+    Payment.findOne({
+        where: req.params
+    }).then(payment => {
         if (payment) {
             res.send(payment);
         } else {

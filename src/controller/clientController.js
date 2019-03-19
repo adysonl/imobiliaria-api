@@ -5,9 +5,22 @@ const Client = require('../models/client');
 const url = '/client';
 
 router.get('', function(req, res) {
-    //console.log(req);
-    Client.findAll().then(clients => {
+    Client.findAll({
+        where: req.query
+    }).then(clients => {
         res.send(clients);
+    });
+});
+
+router.get('/:id', function(req, res) {
+    Client.findOne({
+        where: req.params
+    }).then(client => {
+        if (client) {
+            res.send(client);
+        } else {
+            res.json({error: 'client not found'});
+        }
     });
 });
 

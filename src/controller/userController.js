@@ -26,7 +26,9 @@ router.use(function (req, res, next){
 
 router.get('', function(req, res) {
     //console.log(req);
-        User.findAll().then(users => {
+        User.findAll({
+            where: req.query
+        }).then(users => {
             res.send(users);
         });
   });
