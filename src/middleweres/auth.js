@@ -6,7 +6,7 @@ const verify = (req, res, next) =>{
     if(token){
         jwt.verify(token, config.secret, (err, decoded) => {
         if(err){
-            res.json({message: 'authentication failure'});
+            res.json({message: 'authentication failed'});
         }else{
             console.log(decoded);
             next();
