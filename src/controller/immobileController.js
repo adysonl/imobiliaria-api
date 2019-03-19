@@ -50,11 +50,11 @@ router.put('/:id', middleware.verify, function(req,res){
 router.delete('/:id', middleware.verify, function(req,res){
     Immobile.findByPk(req.params.id).then(immobile => {
         if(immobile){
-            immobile.destroy().then(() => {
+            immobile.destroy({where: req.params}, {where: req.params}).then(() => {
                 res.send(immobile);
             })
         }else{
-            res.json({error: "user not found"});
+            res.json({error: "immobile not found"});
         }
     });
 });
