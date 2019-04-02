@@ -25,18 +25,18 @@ router.post('/login', function(req, res) {
                 // password is correct
                 const token = jwt.sign(user.get({plain: true}), config.secret);            
                 res.json({message: 'User authenticated', token: token}); 
-            } else { 
+                } else { 
                 // password is wrong
-                res.json({message: 'Wrong password'});
+                res.status(400).send({error: 'Credenciais inválidas'});
             }               
         });         
         } else {            
-            res.json({message: 'User not found'});        
+            res.status(404).send({error: 'Usuário não encontrado'});        
         }    
     }); 
 });
 
-router.post('/signup', function(req, res){
+router.post('/signup', function(req, res){ //TODO: adicionar verificação de token, assim só  um usuário pode cadastrar outro
     try{
         bcrypt.hash(req.body.password, 12).then((result) =>{
             User.create({
@@ -48,7 +48,7 @@ router.post('/signup', function(req, res){
         });
         return res.send({message: 'user created'});
     }catch (err){
-        return res.status(400).send({error: 'falha no registro'});
+        return res.status(400).send({error: 'Falha no registro'});
     }
     
 });
@@ -60,7 +60,7 @@ router.put('/', middleware.verify, function(req,res){
                 res.send({message: 'user updated'});
             })
         }else{
-            res.json({error: "user not found"});
+            res.status(404).send({error: 'Usuário não encontrado'});
         }
     });
 });
@@ -72,7 +72,7 @@ router.delete('/', middleware.verify, function(req,res){
                 res.send({message: 'user deleted'});
             })
         }else{
-            res.json({error: "user not found"});
+            res.status(404).send({error: "user not found"});
         }
     });
 });
