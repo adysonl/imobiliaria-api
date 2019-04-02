@@ -1,5 +1,12 @@
 let express = require('express');
 let app = express();
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token")
+  next()
+})
+
 //Data base
 const sequelize = require('./database/index');
 var bodyParser = require('body-parser');
