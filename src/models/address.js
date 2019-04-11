@@ -16,6 +16,9 @@ const Address = sequelize.define('addresses', {
     },
     country: {
         type: Sequelize.STRING
+    },
+    complement: {
+        type: Sequelize.STRING
     }
 });
 
