@@ -4,13 +4,6 @@ const Client = require('../models/client');
 const middleware = require('../middleweres/auth');
 const url = '/client';
 
-router.get('', middleware.verify, function(req, res) {
-    Client.findAll({
-        where: req.query
-    }).then(clients => {
-        res.send(clients);
-    });
-});
 
 router.get('/:id', middleware.verify, function(req, res) {
     Client.findOne({
@@ -56,5 +49,12 @@ router.delete('/:id', middleware.verify, function(req,res) {
         }
     });
 });
-
+router.get('/', function(req, res){
+    const page_size = req.query.page_size;
+    const page_number = req.query.page_number;
+    console.log(page_number);
+    Client.findAll({ limit: page_size, offset: (page_number-1)*page_size }).then(client => {
+        res.send(client);
+    });
+});
 module.exports = app => app.use(url, router);

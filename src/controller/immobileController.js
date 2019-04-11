@@ -59,7 +59,7 @@ router.get('/', function(req, res){
     const page_size = req.query.page_size;
     const page_number = req.query.page_number;
     Immobile.findAll({ limit: page_size, offset: (page_number-1)*page_size }).then(immobile => {
-        for(let i=0; i<page_size; i++){
+        for(let i=0; i<immobile.length; i++){
             let index = i;
             //console.log(immobile[index].dataValues.locator);
             let id = immobile[index].dataValues.locator;
