@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = new Sequelize('imobdb', 'postgres', 'admin', {
+module.exports = new Sequelize('imobdb', 'admin', 'admin', {
   host: 'localhost',
   dialect: 'postgres',
   
