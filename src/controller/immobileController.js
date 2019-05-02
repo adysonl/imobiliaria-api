@@ -2,8 +2,15 @@ const express = require('express');
 const router = express.Router();
 const sequelize = require('sequelize');
 const Immobile = require('../models/immobile');
-const Client = require('../models/client');
 const middleware = require('../middleweres/auth');
+
+router.get('/', function(req, res) {
+    Immobile.findAll({
+        where: req.query
+    }).then(immobiles => {
+        res.send(immobiles);
+    })
+  });
 
 router.get('/:id', function(req, res) {
     Immobile.findOne({
@@ -52,25 +59,6 @@ router.delete('/:id', middleware.verify, function(req,res){
         }else{
             res.json({error: "immobile not found"});
         }
-    });
-});
-
-router.get('/', function(req, res){
-    const page_size = req.query.page_size;
-    const page_number = req.query.page_number;
-    Immobile.findAll({ limit: page_size, offset: (page_number-1)*page_size }).then(immobile => {
-        for(let i=0; i<immobile.length; i++){
-            let index = i;
-            //console.log(immobile[index].dataValues.locator);
-            let id = immobile[index].dataValues.locator;
-            Client.findByPk(id).then(locator =>{
-                immobile[index].dataValues.locator = locator.dataValues;
-                if(index == page_size-1){
-                    res.send(immobile);
-                }
-            });
-        }
-        //res.send(immobile);
     });
 });
 
