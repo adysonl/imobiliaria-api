@@ -2,9 +2,16 @@ const express = require('express');
 const router = express.Router();
 const sequelize = require('sequelize');
 const Immobile = require('../models/immobile');
+const middleware = require('../middleweres/auth');
 const Client = require('../models/client');
 const Address = require('../models/address');
-const middleware = require('../middleweres/auth');
+router.get('/', function(req, res) {
+    Immobile.findAll({
+        where: req.query
+    }).then(immobiles => {
+        res.send(immobiles);
+    })
+  });
 
 router.get('/:id', function(req, res) {
     Immobile.findOne({
@@ -42,8 +49,8 @@ router.post('', middleware.verify, function(req, res){
 
 router.put('/:id', function(req,res){
     Immobile.findByPk(req.params.id).then(immobile => {
-        if(immobile){            
-            Address.update(req.body.address, {where: req.body.address});
+        if(immobile){
+            Address.update(req.body.address, {where: {id:immobile.address}});
             req.body.address = immobile.address;
             immobile.update(req.body, {where: req.params}).then(() => {
                 res.send({message: 'immobile changed'});
@@ -65,11 +72,9 @@ router.delete('/:id', middleware.verify, function(req,res){
         }
     });
 });
-
 router.get('', function(req, res) {
     Immobile.findAll().then(immobiles => {
         res.send(immobiles);
     })
   });
-
 module.exports = app => app.use('/immobile', router);

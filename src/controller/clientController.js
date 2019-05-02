@@ -5,6 +5,13 @@ const Address = require('../models/address');
 const middleware = require('../middleweres/auth');
 const url = '/client';
 
+router.get('', middleware.verify, function(req, res) {
+    Client.findAll({
+        where: req.query
+    }).then(clients => {
+        res.send(clients);
+    });
+});
 
 router.get('/:id', middleware.verify, function(req, res) {
     Client.findOne({
