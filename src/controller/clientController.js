@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Client = require('../models/client');
+const Address = require('../models/address');
 const middleware = require('../middleweres/auth');
 const url = '/client';
 
@@ -10,7 +11,11 @@ router.get('/:id', middleware.verify, function(req, res) {
         where: req.params
     }).then(client => {
         if (client) {
-            res.send(client);
+            Address.findOne({where: client.Address}).then(address=>{
+                client.address = address;
+                res.send(client);
+            });
+            
         } else {
             res.json({error: 'client not found'});
         }
@@ -49,12 +54,9 @@ router.delete('/:id', middleware.verify, function(req,res) {
         }
     });
 });
-router.get('/', function(req, res){
-    const page_size = req.query.page_size;
-    const page_number = req.query.page_number;
-    console.log(page_number);
-    Client.findAll({ limit: page_size, offset: (page_number-1)*page_size }).then(client => {
-        res.send(client);
-    });
-});
+router.get('', function(req, res) {
+    Client.findAll().then(clientes => {
+        res.send(clientes);
+    })
+  });
 module.exports = app => app.use(url, router);

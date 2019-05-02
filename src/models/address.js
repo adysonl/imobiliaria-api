@@ -1,3 +1,5 @@
+const Sequelize = require('sequelize');
+const sequelize = require('../database/index');
 const Address = sequelize.define('addresses', {
     street: {
         type: Sequelize.STRING

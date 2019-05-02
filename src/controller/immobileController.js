@@ -3,6 +3,7 @@ const router = express.Router();
 const sequelize = require('sequelize');
 const Immobile = require('../models/immobile');
 const Client = require('../models/client');
+const Address = require('../models/address');
 const middleware = require('../middleweres/auth');
 
 router.get('/:id', function(req, res) {
@@ -10,7 +11,11 @@ router.get('/:id', function(req, res) {
         where: req.params
     }).then(immobile => {
         if(immobile) {
-            res.send(immobile);
+            Address.findOne({ where: immobile.address}).then( address =>{
+                immobile.address = address;
+                res.send(immobile);
+            });
+            
         } else {
             res.send(req);
             res.json({error: 'immobile not found'});
@@ -20,7 +25,11 @@ router.get('/:id', function(req, res) {
 
 router.post('', middleware.verify, function(req, res){
     try{
-        Immobile.create(req.body);
+        Address.create(req.body.address).then(address =>{
+            req.body.Address = address;
+            Immobile.create(req.body);
+        });
+        
         return res.send({message: 'immobile created'});
     }catch (err){
         console.log("||||||||||||");
@@ -31,9 +40,11 @@ router.post('', middleware.verify, function(req, res){
     
 });
 
-router.put('/:id', middleware.verify, function(req,res){
+router.put('/:id', function(req,res){
     Immobile.findByPk(req.params.id).then(immobile => {
-        if(immobile){
+        if(immobile){            
+            Address.update(req.body.address, {where: req.body.address});
+            req.body.address = immobile.address;
             immobile.update(req.body, {where: req.params}).then(() => {
                 res.send({message: 'immobile changed'});
             })
@@ -55,23 +66,10 @@ router.delete('/:id', middleware.verify, function(req,res){
     });
 });
 
-router.get('/', function(req, res){
-    const page_size = req.query.page_size;
-    const page_number = req.query.page_number;
-    Immobile.findAll({ limit: page_size, offset: (page_number-1)*page_size }).then(immobile => {
-        for(let i=0; i<immobile.length; i++){
-            let index = i;
-            //console.log(immobile[index].dataValues.locator);
-            let id = immobile[index].dataValues.locator;
-            Client.findByPk(id).then(locator =>{
-                immobile[index].dataValues.locator = locator.dataValues;
-                if(index == page_size-1){
-                    res.send(immobile);
-                }
-            });
-        }
-        //res.send(immobile);
-    });
-});
+router.get('', function(req, res) {
+    Immobile.findAll().then(immobiles => {
+        res.send(immobiles);
+    })
+  });
 
 module.exports = app => app.use('/immobile', router);
