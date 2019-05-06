@@ -2,27 +2,27 @@ const express = require('express');
 const router = express.Router();
 const models = require('../models/index');
 const middleware = require('../middleweres/auth');
-
+// const jsPDF = require('jspdf');
 const url = '/contract';
-
-router.get('', middleware.verify, function(req, res) {
-    models.Contract.findAll({
+const include = [
+    {
+        model: models.Property,
+        as: 'property',
         include: [
             {
-                model: models.Property,
-                as: 'property',
-                include: [
-                    {
-                        model: models.Client,
-                        as: 'locator'
-                    }
-                ]
-            },
-            {
                 model: models.Client,
-                as: 'renter'
+                as: 'locator'
             }
-        ],
+        ]
+    },
+    {
+        model: models.Client,
+        as: 'renter'
+    }
+];
+router.get('', middleware.verify, function(req, res) {
+    models.Contract.findAll({
+        include: include,
         where: req.query
     }).then(contracts => {
         res.send(contracts);
@@ -31,6 +31,7 @@ router.get('', middleware.verify, function(req, res) {
 
 router.get('/:id', middleware.verify, function(req, res) {
     models.Contract.findOne({
+        include: include,
         where: req.params
     }).then(contract => {
         if (contract) {
@@ -39,6 +40,19 @@ router.get('/:id', middleware.verify, function(req, res) {
             res.json({error: 'contract not found'});
         }
     });
+});
+
+router.get('/:id/print', middleware.verify, function(req, res) {
+    models.Contract.findOne({
+        include: include,
+        where: req.params
+    }).then(contract => {
+        // if (contract) {
+        //     var doc = new jsPDF();
+        //     doc.text('Hello world!', 10, 10);
+        //     doc.save('a4.pdf');
+        // }
+    })
 });
 
 router.post('', middleware.verify, function(req, res) {

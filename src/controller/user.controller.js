@@ -55,7 +55,7 @@ router.post('/signup', function(req, res){ //TODO: adicionar verificação de to
 router.put('/', middleware.verify, function(req,res){
     models.User.findByPk(req.params.id).then(user => {
         if(user){
-            User.update(req.body, {where: req.params}).then(() => {
+            user.update(req.body, {where: req.params}).then(() => {
                 res.send({message: 'user updated'});
             })
         }else{

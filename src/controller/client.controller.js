@@ -44,7 +44,7 @@ router.post('', middleware.verify, function(req, res) {
 router.put('/:id', middleware.verify, function(req,res) {
     models.Client.findByPk(req.params.id).then(client => {
         if (client) {
-            Client.update(req.body, {where: req.params}).then(() => {
+            client.update(req.body, {where: req.params}).then(() => {
                 res.send({message: 'client updated'});
             });
         } else {
