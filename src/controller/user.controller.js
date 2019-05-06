@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const models = require('../models/index');
 const config = require('../config');
 const middleware = require('../middleweres/auth');
 
 
 router.get('/user', function(req, res) {
-    User.findAll({
+    models.User.findAll({
         where: req.query,
         attributes: ['id', 'name', 'login', 'email']
     }).then(users => {
@@ -18,7 +17,7 @@ router.get('/user', function(req, res) {
   });
 
 router.post('/login', function(req, res) {
-    User.findOne({where: {login: req.body.login}}).then((user) => {
+    models.User.findOne({where: {login: req.body.login}}).then((user) => {
         if (user) {
             bcrypt.compare(req.body.password, user.password).then((result) => {
             if (result) { 
@@ -39,7 +38,7 @@ router.post('/login', function(req, res) {
 router.post('/signup', function(req, res){ //TODO: adicionar verificação de token, assim só  um usuário pode cadastrar outro
     try{
         bcrypt.hash(req.body.password, 12).then((result) =>{
-            User.create({
+            models.User.create({
                 name: req.body.name,
                 login: req.body.login,
                 password: result,
@@ -54,7 +53,7 @@ router.post('/signup', function(req, res){ //TODO: adicionar verificação de to
 });
 
 router.put('/', middleware.verify, function(req,res){
-    User.findByPk(req.params.id).then(user => {
+    models.User.findByPk(req.params.id).then(user => {
         if(user){
             User.update(req.body, {where: req.params}).then(() => {
                 res.send({message: 'user updated'});
@@ -66,7 +65,7 @@ router.put('/', middleware.verify, function(req,res){
 });
 
 router.delete('/', middleware.verify, function(req,res){
-    User.findByPk(req.params.id).then(user => {
+    models.User.findByPk(req.params.id).then(user => {
         if(user){
             User.destroy({where: req.params}).then(() => {
                 res.send({message: 'user deleted'});
