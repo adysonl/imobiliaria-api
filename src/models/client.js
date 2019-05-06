@@ -1,30 +1,40 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../database/index');
+module.exports = (sequelize, DataTypes) => {
+    const Client = sequelize.define('Client', {
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        nationalType: {
+            type: DataTypes.ENUM,
+            values: ['individual', 'company'],
+            allowNull: false
+        },
+        nationalId: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        career: {
+            type: DataTypes.STRING
+        },
+        rg: {
+            type: DataTypes.STRING
+        },
+        phone: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        email: {
+            type: DataTypes.STRING
+        }
+    });
 
-const Client = sequelize.define('clients', {
-    name: {
-        type: Sequelize.STRING
-    },
-    nationalType: {
-        type: Sequelize.ENUM,
-        values: ['individual', 'company']
-    },
-    nationalId: {
-        type: Sequelize.STRING
-    },
-    career: {
-        type: Sequelize.STRING
-    },
-    rg: {
-        type: Sequelize.STRING
-    },
-    phone: {
-        type: Sequelize.STRING
-    },
-    email: {
-        type: Sequelize.STRING
+    Client.associate = (models) => {
+        Client.belongsTo(models.Address, {
+           onDelete: 'CASCADE',
+           foreignKey: 'addressId',
+           as: 'address'
+        });
     }
-});
 
-Client.sync();
-module.exports = Client;
+    return Client;
+  };

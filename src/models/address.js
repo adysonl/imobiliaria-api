@@ -1,28 +1,27 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../database/index');
-const Address = sequelize.define('addresses', {
-    street: {
-        type: Sequelize.STRING
-    },
-    streetNumber: {
-        type: Sequelize.STRING
-    },
-    neighbour: {
-        type: Sequelize.STRING
-    },
-    city: {
-        type: Sequelize.STRING
-    },
-    state: {
-        type: Sequelize.STRING
-    },
-    country: {
-        type: Sequelize.STRING
-    },
-    complement: {
-        type: Sequelize.STRING
-    }
-});
+module.exports = (sequelize, DataTypes) => {
+    const Address = sequelize.define('Address', {
+        street: {
+            type: DataTypes.STRING
+        },
+        streetNumber: {
+            type: DataTypes.STRING
+        },
+        neighbour: {
+            type: DataTypes.STRING
+        },
+        city: {
+            type: DataTypes.STRING
+        },
+        state: {
+            type: DataTypes.STRING
+        },
+        country: {
+            type: DataTypes.STRING
+        },
+        complement: {
+            type: DataTypes.STRING
+        }
+    });
 
-Address.sync();
-module.exports = Address;
+    return Address;
+};

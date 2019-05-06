@@ -1,20 +1,18 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../database/index');
+module.exports = (sequelize, DataTypes) => {
+    const User = sequelize.define('User', {
+        name: {
+            type: DataTypes.STRING
+        },
+        login: {
+            type: DataTypes.STRING
+        },
+        password: {
+            type: DataTypes.STRING
+        },
+        email: {
+            type: DataTypes.STRING
+        }
+    });
 
-const user = sequelize.define('users', {
-    name: {
-        type: Sequelize.STRING
-    },
-    login: {
-        type: Sequelize.STRING
-    },
-    password: {
-        type: Sequelize.STRING
-    },
-    email: {
-        type: Sequelize.STRING
-    }
-});
-
-user.sync();
-module.exports = user;
+    return User;
+};

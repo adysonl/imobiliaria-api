@@ -1,12 +1,34 @@
 const express = require('express');
 const router = express.Router();
-const Payment = require('../models/payment');
+const models = require('../models/index');
 const middleware = require('../middleweres/auth');
 
 const url = '/payment';
 
 router.get('', middleware.verify, function(req, res) {
-    Payment.findAll({
+    models.Payment.findAll({
+        include: [
+            {
+                model: models.Contract,
+                as: 'contract',
+                include: [
+                    {
+                        model: models.Client,
+                        as: 'renter',                            
+                    },
+                    {
+                        model: models.Property,
+                        as: 'property',
+                        include: [
+                            {
+                                model: models.Client,
+                                as: 'locator'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
         where: req.query
     }).then(payments => {
         res.send(payments);
@@ -14,7 +36,7 @@ router.get('', middleware.verify, function(req, res) {
   });
 
 router.get('/:id', middleware.verify, function(req, res) {
-    Payment.findOne({
+    models.Payment.findOne({
         where: req.params
     }).then(payment => {
         if (payment) {
@@ -27,7 +49,7 @@ router.get('/:id', middleware.verify, function(req, res) {
 
 router.post('', middleware.verify, function(req, res) {
     try {
-        const Payment = Payment.create(req.body);
+        models.Payment.create(req.body);
         return res.send({message: 'payment created'});
     } catch (err) {
         return res.status(400).send({error: 'falha no registro'});
@@ -36,7 +58,7 @@ router.post('', middleware.verify, function(req, res) {
 });
 
 router.put('/:id', middleware.verify, function(req,res) {
-    Payment.findByPk(req.params.id).then(payment => {
+    models.Payment.findByPk(req.params.id).then(payment => {
         if (payment) {
             payment.update(req.body, {where: req.params}).then(() => {
                 res.send({message: 'payment changed'});
@@ -48,7 +70,7 @@ router.put('/:id', middleware.verify, function(req,res) {
 });
 
 router.delete('/:id', middleware.verify, function(req,res) {
-    Payment.findByPk(req.params.id).then(payment => {
+    models.Payment.findByPk(req.params.id).then(payment => {
         if (payment) {
             payment.destroy({where: req.params}).then(() => {
                 res.send(payment);

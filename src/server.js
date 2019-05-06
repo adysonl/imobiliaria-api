@@ -27,11 +27,11 @@ sequelize
   });
 
 
-require('./controller/userController')(app);
-require('./controller/immobileController')(app);
-require('./controller/contractsController')(app);
-require('./controller/clientController')(app);
-require('./controller/paymentController')(app);
+require('./controller/user.controller')(app);
+require('./controller/property.controller')(app);
+require('./controller/contract.controller')(app);
+require('./controller/client.controller')(app);
+require('./controller/payment.controller')(app);
 //require('./middleweres/auth')(app);
 
 app.listen(3000, function () {
