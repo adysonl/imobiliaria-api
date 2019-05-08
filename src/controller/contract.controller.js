@@ -115,11 +115,12 @@ router.post('', middleware.verify, function(req, res) {
             let paymentDate = contract.startDate;
             let payments = [];
             while (paymentDate < contract.endDate) {
+                var status = new Date(paymentDate) < new Date() ? 'late' : 'pending'
                 payments.push(
                     {
                         contractId: contract.id,
                         dueDate: new Date(paymentDate),
-                        status: 'future'
+                        status: status
                     }
                 )
                 paymentDate.setMonth(paymentDate.getMonth() + 1);  

@@ -56,7 +56,7 @@ router.put('/:id', middleware.verify, function(req,res) {
 router.delete('/:id', middleware.verify, function(req,res) {
     models.Client.findByPk(req.params.id).then(client => {
         if(client) {
-            Client.destroy({where: req.params}).then(() => {
+            client.destroy({where: req.params}).then(() => {
                 res.send({message: 'client deleted'});
             });
         } else {

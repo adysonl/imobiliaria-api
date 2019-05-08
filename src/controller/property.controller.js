@@ -61,8 +61,12 @@ router.put('/:id', middleware.verify, function(req,res){
     models.Property.findByPk(req.params.id).then(property => {
         if(property){
             property.update(req.body, {where: req.params}).then(() => {
-                res.send({message: 'property changed'});
-            })
+                models.Address.findByPk(property.addressId).then(address => {
+                    address.update(req.body.address,  {where: req.params}).then(() => {
+                        res.send({message: 'property changed'});
+                    });
+                });
+            });
         }else{
             res.json({error: "user not found"});
         }

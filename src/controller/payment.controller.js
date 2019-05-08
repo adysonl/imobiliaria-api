@@ -68,10 +68,13 @@ router.post('', middleware.verify, function(req, res) {
     
 });
 
-router.put('/:id', middleware.verify, function(req,res) {
+router.put('/:id/pay', middleware.verify, function(req,res) {
     models.Payment.findByPk(req.params.id).then(payment => {
         if (payment) {
-            payment.update(req.body, {where: req.params}).then(() => {
+            payment.status = 'paid';
+            payment.paymentDate = new Date();
+            console.log(payment)
+            payment.update(payment.dataValues, {where: req.params}).then(() => {
                 res.send({message: 'payment changed'});
             });
         } else {
