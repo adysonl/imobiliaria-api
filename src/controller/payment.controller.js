@@ -5,6 +5,21 @@ const middleware = require('../middleweres/auth');
 const pdf = require('html-pdf');
 const fs = require('fs');
 
+const MONTHS = {
+    '1': 'janeiro',
+    '2': 'fevereiro',
+    '3': 'março',
+    '4': 'abril',
+    '5': 'maio',
+    '6': 'junho',
+    '7': 'julho',
+    '8': 'agosto',
+    '9': 'setembro',
+    '10': 'outubro',
+    '11': 'novembro',
+    '12': 'dezembro'
+};
+
 const replaceAll = function (str, find, replace) {
     return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 }; 
@@ -29,6 +44,10 @@ const include =
                     {
                         model: models.Client,
                         as: 'locator'
+                    },
+                    {
+                        model: models.Address,
+                        as: 'address'
                     }
                 ]
             }
@@ -105,7 +124,7 @@ router.get('/:id/print', middleware.verify, function(req, response) {
         }
 
         html = replaceAll(html, 'day', payment.paymentDate.getDay());
-        html = replaceAll(html, 'month', payment.paymentDate.getMonth());
+        html = replaceAll(html, 'month', MONTHS[payment.paymentDate.getMonth()]);
         html = replaceAll(html, 'year', payment.paymentDate.getYear());
 
         html = replaceAll(html, 'value', payment.contract.value);
