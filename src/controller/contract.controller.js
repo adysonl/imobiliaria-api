@@ -2,7 +2,30 @@ const express = require('express');
 const router = express.Router();
 const models = require('../models/index');
 const middleware = require('../middleweres/auth');
-// const jsPDF = require('jspdf');
+const pdf = require('html-pdf');
+const fs = require('fs');
+const MONTHS = {
+    '1': 'janeiro',
+    '2': 'fevereiro',
+    '3': 'março',
+    '4': 'abril',
+    '5': 'maio',
+    '6': 'junho',
+    '7': 'julho',
+    '8': 'agosto',
+    '9': 'setembro',
+    '10': 'outubro',
+    '11': 'novembro',
+    '12': 'dezembro'
+};
+
+const replaceAll = function (str, find, replace) {
+    return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}; 
+const escapeRegExp = function(str) {
+    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+};
+
 const url = '/contract';
 const include = [
     {
@@ -42,16 +65,46 @@ router.get('/:id', middleware.verify, function(req, res) {
     });
 });
 
-router.get('/:id/print', middleware.verify, function(req, res) {
+router.get('/:id/print', middleware.verify, function(req, response) {
     models.Contract.findOne({
         include: include,
         where: req.params
     }).then(contract => {
-        // if (contract) {
-        //     var doc = new jsPDF();
-        //     doc.text('Hello world!', 10, 10);
-        //     doc.save('a4.pdf');
-        // }
+        var html = fs.readFileSync('src/assets/contract.html', 'utf-8');
+        html = replaceAll(html, 'locator.name', contract.property.locator.name);
+        html = replaceAll(html, 'locator.cpf', contract.property.locator.nationalId);
+        html = replaceAll(html, 'locator.career', contract.property.locator.career);
+        html = replaceAll(html, 'locator.rg', contract.property.locator.rg);
+
+        html = replaceAll(html, 'renter.name', contract.renter.name);
+        html = replaceAll(html, 'renter.cpf', contract.renter.nationalId);
+        html = replaceAll(html, 'renter.career', contract.renter.career);
+        html = replaceAll(html, 'renter.rg', contract.renter.rg);
+
+        if (contract.property.address) {
+            html = replaceAll(html, 'property.street', contract.property.address.street);
+            html = replaceAll(html, 'property.neighbour', contract.property.address.neighbour);
+            html = replaceAll(html, 'property.city', contract.property.address.city);
+            html = replaceAll(html, 'property.state', contract.property.address.state);
+            html = replaceAll(html, 'property.country', contract.property.address.country);
+        }
+
+        html = replaceAll(html, 'startDay', contract.startDate.getDay());
+        html = replaceAll(html, 'startMonth', MONTHS[contract.startDate.getMonth()]);
+        html = replaceAll(html, 'startYear', contract.startDate.getYear());
+
+        html = replaceAll(html, 'value', contract.value);
+        html = replaceAll(html, 'condo', contract.condo);
+
+
+        pdf.create(html, {format: 'Letter' }).toFile('public/contract.pdf', function(err, res) {
+            if (err) return console.log(err);
+            var stream = fs.createReadStream('public/contract.pdf');
+            response.setHeader('Content-type', 'application/pdf');
+            stream.pipe(response);
+            response.send('/static/contract.pdf');
+        });
+
     })
 });
 
